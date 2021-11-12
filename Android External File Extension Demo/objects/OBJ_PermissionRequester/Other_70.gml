@@ -1,0 +1,10 @@
+switch(async_load[? "type"])
+{
+	default:
+		break;
+	
+	case "permission_check":
+		permission_request = 1;
+		permission_wait[1] = permission_wait[2];
+		break;
+}

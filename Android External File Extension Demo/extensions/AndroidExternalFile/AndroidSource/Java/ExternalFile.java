@@ -81,7 +81,7 @@ public class ExternalFile extends RunnerSocial {
                     saf_root_path = get_path_from_uri(context, uri_document);
 
                     int ds_map = RunnerJNILib.jCreateDsMap(null, null, null);
-                    RunnerJNILib.DsMapAddString(ds_map, "type", "saf_request_accepted");
+                    RunnerJNILib.DsMapAddString(ds_map, "type", "saf_request_loaded");
                     RunnerJNILib.DsMapAddString(ds_map, "path", saf_root_path);
                     RunnerJNILib.CreateAsynEventWithDSMap(ds_map, EVENT_ASYNC_SOCIAL);
                 }
@@ -119,7 +119,8 @@ public class ExternalFile extends RunnerSocial {
                     saf_root = _intent.getData();
                     ContentResolver contentResolver = activity.getContentResolver();
 
-                    int flags = _intent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    int flags = _intent.getFlags();
+                    flags &= (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                     contentResolver.takePersistableUriPermission(saf_root, flags);
 
                     pref.edit().putString(pref_key[0], saf_root.toString()).apply();
@@ -150,7 +151,7 @@ public class ExternalFile extends RunnerSocial {
 
     /*  FILE PATH SYSTEM  */
     public String directory_get_external_files() {
-        String result = "";
+        String result;
         File file = context.getExternalFilesDir(null);
 
         result = file.getAbsolutePath();
@@ -159,7 +160,7 @@ public class ExternalFile extends RunnerSocial {
     }
 
     public String directory_get_external_cache() {
-        String result = "";
+        String result;
         File file = context.getExternalCacheDir();
 
         result = file.getAbsolutePath();
@@ -216,6 +217,38 @@ public class ExternalFile extends RunnerSocial {
         return result;
     }
 
+    public String file_apply_name(String _path, String _name)
+    {
+        String result = "";
+
+        String restrict = "|\\\\?*<\":>/";
+        String regex = "[" + restrict + "]+";
+
+        String[] token = _name.split("\\.(?=[^\\.]+$)");
+        String name = token[0];
+        String ext = token[1];
+
+        int retry = 0;
+
+        name = name.replaceAll(regex, "_");
+
+        File directory = new File(_path);
+        if(directory.isDirectory() && directory.exists()) {
+            boolean able;
+            do {
+                result = name + ((retry == 0) ? "" : " (" + retry + ")") + "." + ext;
+                File file = new File(_path + "/" + result);
+                if (file.exists()) {
+                    retry += 1;
+                    able = false;
+                } else {
+                    able = true;
+                }
+            } while (!able);
+        }
+
+        return result;
+    }
 
     /*  SAF PATH SYSTEM  */
     public double saf_directory_create(String _path, String _rename) {
@@ -636,8 +669,7 @@ public class ExternalFile extends RunnerSocial {
 
     /*  DEBUG  */
     public double send_double(double d) {
-        double result = d;
-        return result;
+        return d;
     }
 
     public void send_social_log(String _text) {
@@ -664,7 +696,7 @@ public class ExternalFile extends RunnerSocial {
         return paths;
     }
 
-    private long file_copy(InputStream in, OutputStream out) throws IOException {
+    private void file_copy(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[8024];
         int n;
         long count = 0;
@@ -673,7 +705,6 @@ public class ExternalFile extends RunnerSocial {
             out.write(buffer, 0, n);
             count += n;
         }
-        return count;
     }
 
     private DocumentFile saf_directory_parse(DocumentFile root, String _path) {

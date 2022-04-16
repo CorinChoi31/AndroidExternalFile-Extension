@@ -20,6 +20,8 @@ if(global.__permission)
 		
 		draw_rectangle(room_width/8*5, room_height/32*5, room_width/8*7, room_height/32*7, true);
 		draw_text(room_width/8*6, room_height/32*6, "Create Text File");
+		
+		draw_text(room_width/2, room_height/32*30, directory_is_saf_accessible());
 	}
 	
 	if(file_list != undefined && ds_exists(file_list, ds_type_map))

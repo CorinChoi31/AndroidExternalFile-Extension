@@ -27,14 +27,12 @@ switch(os_type)
 	default:
 		global.__storage_security = global.__storage_security + "/Locked";
 		
-		global.__storage_internal = environment_get_variable("Home");
+		global.__storage_internal = environment_get_variable("UserProfile");
 		global.__storage_internal = string_replace_all(global.__storage_internal, @"\", "/");
-		global.__storage_internal = string_copy(global.__storage_internal, 0, string_length(global.__storage_internal) - string_length("Desktop/"));
 		global.__storage_internal = global.__storage_internal + "/Documents/My Games/AndroidExternalFileExtionsionDemo";
 		
-		global.__storage_external = environment_get_variable("Home");
+		global.__storage_external = environment_get_variable("UserProfile");
 		global.__storage_external = string_replace_all(global.__storage_external, @"\", "/");
-		global.__storage_external = string_copy(global.__storage_external, 0, string_length(global.__storage_external) - string_length("Desktop/"));
 		global.__storage_external = global.__storage_external + "/Documents/My Games/AndroidExternalFileExtionsionDemo";
 		
 		if(!directory_exists(global.__storage_external))

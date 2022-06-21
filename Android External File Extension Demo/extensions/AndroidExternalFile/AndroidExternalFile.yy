@@ -163,7 +163,7 @@
             1,
             1,
           ],"resourceVersion":"1.0","name":"saf_file_move","tags":[],"resourceType":"GMExtensionFunction",},
-        {"externalName":"saf_file_copy_from_file","kind":4,"help":"saf_file_copy_from_file(filesrc_path, filesrc_name, safdst_path, safdst_name)","hidden":false,"returnType":2,"argCount":0,"args":[
+        {"externalName":"saf_file_copy_from_file","kind":4,"help":"saf_file_copy_from_file(file_src_path, file_src_name, saf_dst_path, saf_dst_name)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
             1,
             1,
@@ -174,6 +174,12 @@
             1,
             1,
           ],"resourceVersion":"1.0","name":"file_apply_name","tags":[],"resourceType":"GMExtensionFunction",},
+        {"externalName":"saf_file_copy_to_file","kind":4,"help":"saf_file_copy_to_file(src_path, src_name, dst_path, dst_name)","hidden":false,"returnType":2,"argCount":0,"args":[
+            1,
+            1,
+            1,
+            1,
+          ],"resourceVersion":"1.0","name":"saf_file_copy_to_file","tags":[],"resourceType":"GMExtensionFunction",},
       ],"constants":[
         {"value":"31","hidden":false,"resourceVersion":"1.0","name":"SAF_REQUEST_SEARCH","tags":[],"resourceType":"GMExtensionConstant",},
         {"value":"32","hidden":false,"resourceVersion":"1.0","name":"SAF_REQUEST_LOAD","tags":[],"resourceType":"GMExtensionConstant",},
@@ -201,6 +207,7 @@
         {"name":"saf_file_move","path":"extensions/AndroidExternalFile/AndroidExternalFile.yy",},
         {"name":"saf_file_copy","path":"extensions/AndroidExternalFile/AndroidExternalFile.yy",},
         {"name":"saf_file_copy_from_file","path":"extensions/AndroidExternalFile/AndroidExternalFile.yy",},
+        {"name":"saf_file_copy_to_file","path":"extensions/AndroidExternalFile/AndroidExternalFile.yy",},
         {"name":"saf_file_text_open_read","path":"extensions/AndroidExternalFile/AndroidExternalFile.yy",},
         {"name":"saf_file_text_open_write","path":"extensions/AndroidExternalFile/AndroidExternalFile.yy",},
         {"name":"saf_file_text_open_append","path":"extensions/AndroidExternalFile/AndroidExternalFile.yy",},

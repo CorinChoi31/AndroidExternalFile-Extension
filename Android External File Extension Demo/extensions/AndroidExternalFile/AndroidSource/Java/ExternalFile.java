@@ -23,6 +23,7 @@ import com.yoyogames.runner.RunnerJNILib;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -183,7 +184,7 @@ public class ExternalFile extends RunnerSocial {
             int count_file = 0;
             int count_directory = 0;
 
-            if(files != null) {
+            if (files != null) {
                 int size = files.length;
 
                 for (File value : files) {
@@ -217,8 +218,7 @@ public class ExternalFile extends RunnerSocial {
         return result;
     }
 
-    public String file_apply_name(String _path, String _name)
-    {
+    public String file_apply_name(String _path, String _name) {
         String result = "";
 
         String restrict = "|\\\\?*<\":>/";
@@ -233,7 +233,7 @@ public class ExternalFile extends RunnerSocial {
         name = name.replaceAll(regex, "_");
 
         File directory = new File(_path);
-        if(directory.isDirectory() && directory.exists()) {
+        if (directory.isDirectory() && directory.exists()) {
             boolean able;
             do {
                 result = name + ((retry == 0) ? "" : " (" + retry + ")") + "." + ext;
@@ -271,7 +271,7 @@ public class ExternalFile extends RunnerSocial {
 
         DocumentFile path = home;
         for (String p : tree) {
-            if(path != null) {
+            if (path != null) {
                 DocumentFile find = path.findFile(p);
                 if (find == null) {
                     path = path.createDirectory(p);
@@ -517,6 +517,34 @@ public class ExternalFile extends RunnerSocial {
 
                     inputStream.close();
                     outputStream.close();
+                }
+            }
+        }
+    }
+
+    public void saf_file_copy_to_file(String _path_src, String _name_src, String _path_dst, String _name_dst) throws IOException {
+        DocumentFile path_src = saf_directory_parse(DocumentFile.fromTreeUri(context, saf_root), _path_src);
+        if (path_src != null) {
+            DocumentFile input = path_src.findFile(_name_src);
+            if (input.exists()) {
+                File path_dst = new File(_path_dst + "/");
+                if (!path_dst.exists()) {
+                    path_dst.mkdirs();
+                }
+                if (path_dst.exists()) {
+                    File output = new File(_path_dst + "/" + _name_dst);
+                    if (!output.exists()) {
+                        output.createNewFile();
+                    }
+                    if (output.exists()) {
+                        InputStream inputStream = resolver.openInputStream(input.getUri());
+                        OutputStream outputStream = new FileOutputStream(output);
+
+                        file_copy(inputStream, outputStream);
+
+                        inputStream.close();
+                        outputStream.close();
+                    }
                 }
             }
         }

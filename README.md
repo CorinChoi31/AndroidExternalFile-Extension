@@ -8,4 +8,5 @@ English Documentation (Papago Translate): https://papago.naver.net/website?local
 
 -----
 ##Announce
+
 2023.02.25. Permission grant doesn't work successfully on API 33. Please don't use demo's permissions as default.

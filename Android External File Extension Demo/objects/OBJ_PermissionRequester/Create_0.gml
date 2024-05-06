@@ -1,5 +1,26 @@
+/*  
+    Please Manually Update AndroidManifest.xml File
+    
+    1. Open your explorer, and move to
+        %programdata%\GameMakerStudio2\Cache\runtimes\<your-runtime-version>\android\runner\ProjectFiles\src\main\
+        
+    2. Open AndroidManifest.xml file.
+    
+    3. Add Permission Under ${YYAndroidManifestPermission}.
+    
+    ----- AndroidManifest.xml ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+    Line 06  : ${YYAndroidManifestPermission}
+    Line 07 +: <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    Line 08 +: <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+    Line 09 +: <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+    
+*/
 permission_prefix = "android.permission."
-permission_list = ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"];
+permission_list = ["READ_MEDIA_IMAGES", "READ_MEDIA_VIDEO", "READ_MEDIA_AUDIO"];
+if(os_version <= 32) {
+    permission_list = ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"];
+}
+
 
 permission_request = -1;
 /*

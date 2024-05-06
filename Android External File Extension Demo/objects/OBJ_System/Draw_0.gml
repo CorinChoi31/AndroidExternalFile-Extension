@@ -10,8 +10,27 @@ if(global.__permission)
 	draw_rectangle(room_width/8*1, room_height/32*2, room_width/8*7, room_height/32*4, true);
 	draw_text(room_width/2, room_height/32*3, "< Set SAF Location >");
 	
-	if(global.__storage_external != "")
-	{
+    draw_text(room_width/2, room_height/32*27, global.__storage_external);
+    
+	if(global.__storage_external != "") {
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+        
+        if(test_sprite != undefined) {
+            draw_sprite_ext(test_sprite, -1, 0, 0, 0.5, 0.5, 0, c_white, 0.5);
+        }
+        
+        if(test_audio != undefined) {
+            draw_text(16, 32, "audio test ran");
+        }
+        
+        if(test_text != -1) {
+            draw_text(16, 64, test_text_content);
+        }
+        
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+
 		draw_rectangle(room_width/8*1, room_height/32*5, room_width/8*3, room_height/32*7, true);
 		draw_text(room_width/8*2, room_height/32*6, "Create Directory");
 		

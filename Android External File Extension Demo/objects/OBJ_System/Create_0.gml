@@ -1,3 +1,5 @@
+show_debug_overlay(true, true);
+
 randomize();
 global.__permission = true;
 
@@ -52,3 +54,9 @@ switch(os_type)
 }
 
 file_list = undefined;
+
+test_sprite = undefined;
+test_audio = undefined;
+test_audio_id = undefined;
+test_text = -1;
+test_text_content = "";

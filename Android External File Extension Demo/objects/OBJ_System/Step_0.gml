@@ -9,6 +9,38 @@ if(global.__permission)
 		
 		if(global.__storage_external != "")
 		{
+            if(saf_file_exists("/", "test.png")) {
+                test_sprite := sprite_add(global.__storage_external + "/test.png", 1, false, false, 0, 0);
+            }
+            if(saf_file_exists("/", "test.ogg")) {
+                if(test_audio == undefined) {
+                    test_audio = audio_create_stream(global.__storage_external + "/test.ogg");
+                    if(test_audio != undefined) {
+                        test_audio_id = audio_play_sound(test_audio, 0, false, 0.5);
+                    }
+                }
+            }
+            if(saf_file_exists("/", "test.txt")) {
+                if(test_text == -1) {
+                    test_text = saf_file_text_open_read("/", "test.txt");
+                    if(test_text != -1) {
+                        while(!saf_file_text_eoln(test_text)) {
+                            var content = saf_file_text_readln(test_text);
+                            if(content != undefined) {
+                                test_text_content += content;
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                        saf_file_text_close(test_text);
+                        test_text = saf_file_text_open_append("/", "test.txt");
+                        saf_file_text_writeln(test_text, "text test finished");
+                        saf_file_text_close(test_text);
+                    }
+                }
+            }
+            
 			if(point_in_rectangle(mouse_x, mouse_y, room_width/8*1, room_height/32*5, room_width/8*3, room_height/32*7))
 			{
 				var _str = "";

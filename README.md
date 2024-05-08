@@ -16,3 +16,7 @@ English Documentation (Papago Translate): https://papago.naver.net/website?local
  - Update permission grant method.
  - Added code to interact with the "test.png", "test.ogg", and "test.txt" files in the SAF folder. Check the OBJ_System.StepEvent and OBJ_System.DrawEvent codes.
  - Added code to request permissions differently depending on Android version. Check the OBJ_PermissionRequrester.CreateEvent code.
+### 2024.05.08. 
+ - Update SAF file request.
+ - Update intent_saf_request(double request_code) to intent_saf_request(double request_code, double mime_type) *Please Check Documentation
+ - Add and Change 'async event - social "type" keys' and MACRO names.

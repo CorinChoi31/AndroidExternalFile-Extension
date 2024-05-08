@@ -17,13 +17,22 @@
   "copyToTargets":8,
   "description":"",
   "exportToGame":true,
-  "extensionVersion":"1.1.2",
+  "extensionVersion":"1.2.0",
   "files":[
     {"$GMExtensionFile":"","%Name":"","constants":[
-        {"$GMExtensionConstant":"","%Name":"SAF_REQUEST_SEARCH","hidden":false,"name":"SAF_REQUEST_SEARCH","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"31",},
-        {"$GMExtensionConstant":"","%Name":"SAF_REQUEST_LOAD","hidden":false,"name":"SAF_REQUEST_LOAD","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"32",},
+        {"$GMExtensionConstant":"","%Name":"SAF_REQUEST_SEARCH_DIRECTORY","hidden":false,"name":"SAF_REQUEST_SEARCH_DIRECTORY","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"31",},
+        {"$GMExtensionConstant":"","%Name":"SAF_REQUEST_GET_DIRECTORY","hidden":false,"name":"SAF_REQUEST_GET_DIRECTORY","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"32",},
+        {"$GMExtensionConstant":"","%Name":"SAF_REQUEST_SEARCH_FILE","hidden":false,"name":"SAF_REQUEST_SEARCH_FILE","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"41",},
+        {"$GMExtensionConstant":"","%Name":"SAF_REQUEST_GET_FILE","hidden":false,"name":"SAF_REQUEST_GET_FILE","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"42",},
+        {"$GMExtensionConstant":"","%Name":"SAF_MIME_TYPE_ANY","hidden":false,"name":"SAF_MIME_TYPE_ANY","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"0",},
+        {"$GMExtensionConstant":"","%Name":"SAF_MIME_TYPE_TEXT","hidden":false,"name":"SAF_MIME_TYPE_TEXT","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"1",},
+        {"$GMExtensionConstant":"","%Name":"SAF_MIME_TYPE_IMAGE","hidden":false,"name":"SAF_MIME_TYPE_IMAGE","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"2",},
+        {"$GMExtensionConstant":"","%Name":"SAF_MIME_TYPE_VIDEO","hidden":false,"name":"SAF_MIME_TYPE_VIDEO","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"3",},
+        {"$GMExtensionConstant":"","%Name":"SAF_MIME_TYPE_AUDIO","hidden":false,"name":"SAF_MIME_TYPE_AUDIO","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"4",},
+        {"$GMExtensionConstant":"","%Name":"SAF_MIME_TYPE_ARCHIVE","hidden":false,"name":"SAF_MIME_TYPE_ARCHIVE","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"5",},
+        {"$GMExtensionConstant":"","%Name":"SAF_MIME_TYPE_APPLICATION","hidden":false,"name":"SAF_MIME_TYPE_APPLICATION","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"6",},
       ],"copyToTargets":8,"filename":"AndroidExternalFile.ext","final":"","functions":[
-        {"$GMExtensionFunction":"","%Name":"intent_saf_request","argCount":0,"args":[2,],"documentation":"","externalName":"intent_saf_request","help":"intent_saf_request(request_code)","hidden":false,"kind":4,"name":"intent_saf_request","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
+        {"$GMExtensionFunction":"","%Name":"intent_saf_request","argCount":0,"args":[2,2,],"documentation":"","externalName":"intent_saf_request","help":"intent_saf_request(request_code, mime_type=SAF_MIME_TYPE_ANY)","hidden":false,"kind":4,"name":"intent_saf_request","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
         {"$GMExtensionFunction":"","%Name":"saf_file_create_text","argCount":0,"args":[1,1,],"documentation":"","externalName":"saf_file_create_text","help":"saf_file_create_text(path, name)","hidden":false,"kind":4,"name":"saf_file_create_text","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"saf_directory_creates","argCount":0,"args":[1,],"documentation":"","externalName":"saf_directory_creates","help":"saf_directory_creates(path)","hidden":false,"kind":4,"name":"saf_directory_creates","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"saf_directory_exists","argCount":0,"args":[1,],"documentation":"","externalName":"saf_directory_exists","help":"saf_directory_exists(path)","hidden":false,"kind":4,"name":"saf_directory_exists","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
@@ -120,7 +129,7 @@
         {"$GMExtensionConstant":"","%Name":"IS_SAF","hidden":false,"name":"IS_SAF","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"1",},
       ],"copyToTargets":3035461389054378222,"filename":"AndroidExternalFile.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"integrated_file_copy","argCount":4,"args":[1,1,1,1,2,2,],"documentation":"","externalName":"integrated_file_copy","help":"integrated_file_copy(src_path, src_name, dst_path, dst_name, src_type, dst_type)","hidden":false,"kind":2,"name":"integrated_file_copy","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-        {"$GMExtensionFunction":"","%Name":"integrated_file_path","argCount":0,"args":[1,1,2,],"documentation":"","externalName":"integrated_file_path","help":"integrated_file_path(path, name, type)","hidden":false,"kind":2,"name":"integrated_file_path","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
+        {"$GMExtensionFunction":"","%Name":"integrated_file_path","argCount":3,"args":[1,1,2,],"documentation":"","externalName":"integrated_file_path","help":"integrated_file_path(path, name, type)","hidden":false,"kind":2,"name":"integrated_file_path","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
       ],"init":"","kind":2,"name":"","order":[
         {"name":"integrated_file_path","path":"extensions/AndroidExternalFile/AndroidExternalFile.yy",},
         {"name":"integrated_file_copy","path":"extensions/AndroidExternalFile/AndroidExternalFile.yy",},

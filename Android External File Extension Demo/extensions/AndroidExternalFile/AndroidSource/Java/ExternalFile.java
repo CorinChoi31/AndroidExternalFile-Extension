@@ -32,16 +32,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ExternalFile extends RunnerSocial {
-    private static final int SAF_REQUEST_SEARCH = 31;
-    private static final int SAF_REQUEST_LOAD = 32;
-
-    private static final int SHOW_SETTINGS = 27;
 
     private static final int EVENT_ASYNC_SOCIAL = 70;
+
+    private static final int SHOW_SETTINGS = 21;
+
+    private static final int SAF_REQUEST_SEARCH_DIRECTORY = 31;
+    private static final int SAF_REQUEST_GET_DIRECTORY = 32;
+    private static final int SAF_REQUEST_SEARCH_FILE = 41;
+    private static final int SAF_REQUEST_GET_FILE = 42;
 
     private static final int RESULT_FAIL = 0;
     private static final int RESULT_SUCCESS = 1;
     private static final int RESULT_SUCCESS_WITH_NOTICE = 2;
+
+    private static final String[] MIME_TYPE = {
+        "*/*",
+        "text/*",
+        "image/*",
+        "video/*",
+        "audio/*",
+        "multipart/*",
+        "application/*"
+    };
 
     private static final String FILE_BINARY = "application/octet-stream";
     private static final String FILE_TEXT = "text/plain";
@@ -51,10 +64,16 @@ public class ExternalFile extends RunnerSocial {
     private final ContentResolver resolver = activity.getContentResolver();
 
     private Uri saf_root = null;
+    private Uri saf_init = null;
+
     private String saf_root_path = "";
+    private String saf_init_path = "";
 
     private final String pref_directory = context.getPackageName() + ".preference";
-    private final String[] pref_key = {"saf_root"};
+    private final String[] pref_key = {
+        "saf_root",
+        "saf_init"
+    };
     private final SharedPreferences pref = activity.getSharedPreferences(pref_directory, Context.MODE_PRIVATE);
 
     //private ArrayList<String> files = new ArrayList<String>();
@@ -62,28 +81,55 @@ public class ExternalFile extends RunnerSocial {
 
 
     /*  INTENT ACTIVITY  */
-    public String intent_saf_request(double _request_code) {
-        String result = "";
+    public String intent_saf_request(double _request_code, double _mime_type) {
         int request_code = (int) _request_code;
+        int mime_type = (int) _mime_type;
+
+        String preference = "";
+        String result = "";
+
+        Intent intent = null;
+        int ds_map = -1;
 
         switch (request_code) {
-            case SAF_REQUEST_SEARCH:
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-                activity.startActivityForResult(intent, SAF_REQUEST_SEARCH);
+            case SAF_REQUEST_SEARCH_DIRECTORY:
+                intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                activity.startActivityForResult(intent, SAF_REQUEST_SEARCH_DIRECTORY);
                 break;
-            case SAF_REQUEST_LOAD:
-                String uri_preference = pref.getString(pref_key[0], "");
-                result = uri_preference;
+            case SAF_REQUEST_GET_DIRECTORY:
+                preference = pref.getString(pref_key[0], "");
+                result = preference;
 
-                if (!uri_preference.equalsIgnoreCase("")) {
-                    saf_root = Uri.parse(uri_preference);
-                    Uri uri_document = DocumentsContract.buildDocumentUriUsingTree(saf_root, DocumentsContract.getTreeDocumentId(saf_root));
+                if (!preference.equalsIgnoreCase("")) {
+                    saf_root = Uri.parse(preference);
+                    Uri uri = DocumentsContract.buildDocumentUriUsingTree(saf_root, DocumentsContract.getTreeDocumentId(saf_root));
 
-                    saf_root_path = get_path_from_uri(context, uri_document);
+                    saf_root_path = get_path_from_uri(context, uri);
 
-                    int ds_map = RunnerJNILib.jCreateDsMap(null, null, null);
-                    RunnerJNILib.DsMapAddString(ds_map, "type", "saf_request_loaded");
+                    ds_map = RunnerJNILib.jCreateDsMap(null, null, null);
+                    RunnerJNILib.DsMapAddString(ds_map, "type", "saf_request_get_directory");
                     RunnerJNILib.DsMapAddString(ds_map, "path", saf_root_path);
+                    RunnerJNILib.CreateAsynEventWithDSMap(ds_map, EVENT_ASYNC_SOCIAL);
+                }
+                break;
+            case SAF_REQUEST_SEARCH_FILE:
+                intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.setType(MIME_TYPE[mime_type]);
+                activity.startActivityForResult(intent, SAF_REQUEST_SEARCH_FILE);
+                break;
+            case SAF_REQUEST_GET_FILE:
+                preference = pref.getString(pref_key[1], "");
+                result = preference;
+
+                if (!preference.equalsIgnoreCase("")) {
+                    saf_init = Uri.parse(preference);
+                    Uri uri = DocumentsContract.buildDocumentUriUsingTree(saf_init, DocumentsContract.getTreeDocumentId(saf_init));
+
+                    saf_init_path = get_path_from_uri(context, uri);
+
+                    ds_map = RunnerJNILib.jCreateDsMap(null, null, null);
+                    RunnerJNILib.DsMapAddString(ds_map, "type", "saf_request_get_file");
+                    RunnerJNILib.DsMapAddString(ds_map, "path", saf_init_path);
                     RunnerJNILib.CreateAsynEventWithDSMap(ds_map, EVENT_ASYNC_SOCIAL);
                 }
                 break;
@@ -115,33 +161,54 @@ public class ExternalFile extends RunnerSocial {
     @Override
     public void onActivityResult(int _request_code, int _result_code, Intent _intent) {
         switch (_request_code) {
-            case SAF_REQUEST_SEARCH:
+            case SAF_REQUEST_SEARCH_DIRECTORY:
                 if (_result_code == Activity.RESULT_OK) {
                     saf_root = _intent.getData();
-                    ContentResolver contentResolver = activity.getContentResolver();
 
                     int flags = _intent.getFlags();
                     flags &= (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    contentResolver.takePersistableUriPermission(saf_root, flags);
+                    activity.getContentResolver().takePersistableUriPermission(saf_root, flags);
+
+                    Uri uri = DocumentsContract.buildDocumentUriUsingTree(saf_root, DocumentsContract.getTreeDocumentId(saf_root));
+                    saf_root_path = get_path_from_uri(context, uri);
 
                     pref.edit().putString(pref_key[0], saf_root.toString()).apply();
 
-                    Uri uri_document = DocumentsContract.buildDocumentUriUsingTree(saf_root, DocumentsContract.getTreeDocumentId(saf_root));
-                    saf_root_path = get_path_from_uri(context, uri_document);
-
                     int ds_map = RunnerJNILib.jCreateDsMap(null, null, null);
-                    RunnerJNILib.DsMapAddString(ds_map, "type", "saf_request_accepted");
+                    RunnerJNILib.DsMapAddString(ds_map, "type", "saf_request_search_directory_accepted");
                     RunnerJNILib.DsMapAddString(ds_map, "path", saf_root_path);
                     RunnerJNILib.CreateAsynEventWithDSMap(ds_map, EVENT_ASYNC_SOCIAL);
                 } else if (_result_code == Activity.RESULT_CANCELED) {
                     int ds_map = RunnerJNILib.jCreateDsMap(null, null, null);
-                    RunnerJNILib.DsMapAddString(ds_map, "type", "saf_request_canceled");
+                    RunnerJNILib.DsMapAddString(ds_map, "type", "saf_request_search_directory_canceled");
+                    RunnerJNILib.CreateAsynEventWithDSMap(ds_map, EVENT_ASYNC_SOCIAL);
+                }
+                break;
+            case SAF_REQUEST_SEARCH_FILE:
+                if (_result_code == Activity.RESULT_OK) {
+                    saf_init = _intent.getData();
+
+                    int flags = _intent.getFlags();
+                    flags &= (Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    activity.getContentResolver().takePersistableUriPermission(saf_init, flags);
+
+                    saf_init_path = get_path_from_uri(context, saf_init);
+
+                    pref.edit().putString(pref_key[1], saf_init.toString()).apply();
+
+                    int ds_map = RunnerJNILib.jCreateDsMap(null, null, null);
+                    RunnerJNILib.DsMapAddString(ds_map, "type", "saf_request_search_file_accepted");
+                    RunnerJNILib.DsMapAddString(ds_map, "path", saf_init_path);
+                    RunnerJNILib.CreateAsynEventWithDSMap(ds_map, EVENT_ASYNC_SOCIAL);
+                } else if (_result_code == Activity.RESULT_CANCELED) {
+                    int ds_map = RunnerJNILib.jCreateDsMap(null, null, null);
+                    RunnerJNILib.DsMapAddString(ds_map, "type", "saf_request_search_file_canceled");
                     RunnerJNILib.CreateAsynEventWithDSMap(ds_map, EVENT_ASYNC_SOCIAL);
                 }
                 break;
             case SHOW_SETTINGS:
                 int ds_map = RunnerJNILib.jCreateDsMap(null, null, null);
-                RunnerJNILib.DsMapAddString(ds_map, "type", "permission_check");
+                RunnerJNILib.DsMapAddString(ds_map, "type", "permission_checked");
                 RunnerJNILib.CreateAsynEventWithDSMap(ds_map, EVENT_ASYNC_SOCIAL);
                 break;
             default:
@@ -152,19 +219,23 @@ public class ExternalFile extends RunnerSocial {
 
     /*  FILE PATH SYSTEM  */
     public String directory_get_external_files() {
-        String result;
+        String result = "";
         File file = context.getExternalFilesDir(null);
 
-        result = file.getAbsolutePath();
+        if (file != null) {
+            result = file.getAbsolutePath();
+        }
 
         return result;
     }
 
     public String directory_get_external_cache() {
-        String result;
+        String result = "";
         File file = context.getExternalCacheDir();
 
-        result = file.getAbsolutePath();
+        if (file != null) {
+            result = file.getAbsolutePath();
+        }
 
         return result;
     }
@@ -496,7 +567,13 @@ public class ExternalFile extends RunnerSocial {
     }
 
     public void saf_file_copy_from_file(String _path_src, String _name_src, String _path_dst, String _name_dst) throws IOException {
-        File input = new File(_path_src + "/" + _name_src);
+        File input = null;
+        if(_name_src.contains(":")) {
+            input = new File(_name_src);
+        }
+        else {
+            input = new File(_path_src + "/" + _name_src);
+        }
 
         if (input.exists()) {
             DocumentFile path = saf_directory_parse(DocumentFile.fromTreeUri(context, saf_root), _path_dst);
@@ -702,8 +779,8 @@ public class ExternalFile extends RunnerSocial {
 
     public void send_social_log(String _text) {
         int map = RunnerJNILib.jCreateDsMap(null, null, null);
-        RunnerJNILib.DsMapAddString(map, "type", "log");
-        RunnerJNILib.DsMapAddString(map, "log", _text);
+        RunnerJNILib.DsMapAddString(map, "type", "logged");
+        RunnerJNILib.DsMapAddString(map, "content", _text);
         RunnerJNILib.CreateAsynEventWithDSMap(map, EVENT_ASYNC_SOCIAL);
     }
 

@@ -5,6 +5,6 @@ draw_set_valign(fa_middle);
 
 if(!permission_requested)
 {
-	draw_rectangle(room_width/8, room_height/32*2, room_width/8*7, room_height/32*4, true);
-	draw_text(room_width/2, room_height/32*3, "< Accept Permission >");
+    draw_rectangle(room_width/8, room_height/32*2, room_width/8*7, room_height/32*4, true);
+    draw_text(room_width/2, room_height/32*3, "< Accept Permission >");
 }

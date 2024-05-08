@@ -1,6 +1,14 @@
 {
-  "FolderOrderSettings":[],
+  "FolderOrderSettings":[
+    {"name":"Extensions","order":1,"path":"folders/Extensions.yy",},
+    {"name":"Objects","order":2,"path":"folders/Objects.yy",},
+    {"name":"Rooms","order":3,"path":"folders/Rooms.yy",},
+    {"name":"Sprites","order":4,"path":"folders/Sprites.yy",},
+  ],
   "ResourceOrderSettings":[
     {"name":"OBJ_PermissionRequester","order":1,"path":"objects/OBJ_PermissionRequester/OBJ_PermissionRequester.yy",},
+    {"name":"SPR_Feature","order":3,"path":"sprites/SPR_Feature/SPR_Feature.yy",},
+    {"name":"SPR_IconMedium","order":1,"path":"sprites/SPR_IconMedium/SPR_IconMedium.yy",},
+    {"name":"SPR_IconSmall","order":2,"path":"sprites/SPR_IconSmall/SPR_IconSmall.yy",},
   ],
 }
